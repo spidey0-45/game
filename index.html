@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game">
+    <h1>Rock Paper Scissors</h1>
+
+    <!-- Display hands -->
+    <div class="hands">
+      <img class="playerHand" src="rock.png" alt="Player hand" />
+      <img class="computerHand" src="rock.png" alt="Computer hand" />
+    </div>
+
+    <!-- Display scores -->
+    <div class="points">
+      <h2>Player: <span id="playerScore">0</span></h2>
+      <h2>Computer: <span id="computerScore">0</span></h2>
+    </div>
+
+    <!-- Display result message -->
+    <div class="result" id="resultText">Make your move!</div>
+
+    <!-- Options -->
+    <div class="options">
+      <button id="rock">🪨 Rock</button>
+      <button id="paper">📄 Paper</button>
+      <button id="scissors">✂️ Scissors</button>
+    </div>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.options button');
+    const playerHand = document.querySelector('.playerHand');
+    const computerHand = document.querySelector('.computerHand');
+    const playerScoreEl = document.getElementById('playerScore');
+    const computerScoreEl = document.getElementById('computerScore');
+    const resultText = document.getElementById('resultText');
+
+    let playerScore = 0;
+    let computerScore = 0;
+    const choices = ['rock', 'paper', 'scissors'];
+
+    function resetHands() {
+      playerHand.src = 'rock.png';
+      computerHand.src = 'rock.png';
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const playerChoice = button.id;
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+        // Reset result text and start animation
+        resultText.textContent = 'Rock... Paper... Scissors...!';
+        resultText.style.color = '#ffd166';
+        resetHands();
+
+        playerHand.classList.add('shakePlayer');
+        computerHand.classList.add('shakeComputer');
+
+        setTimeout(() => {
+          // Stop animation
+          playerHand.classList.remove('shakePlayer');
+          computerHand.classList.remove('shakeComputer');
+
+          // Update hand images
+          playerHand.src = `${playerChoice}.png`;
+          computerHand.src = `${computerChoice}.png`;
+
+          // Determine outcome
+          let result = '';
+          if (playerChoice === computerChoice) {
+            result = 'Draw!';
+            resultText.style.color = '#00b4d8';
+          } else if (
+            (playerChoice === 'rock' && computerChoice === 'scissors') ||
+            (playerChoice === 'paper' && computerChoice === 'rock') ||
+            (playerChoice === 'scissors' && computerChoice === 'paper')
+          ) {
+            result = 'You Win!';
+            resultText.style.color = '#06d6a0';
+            playerScore++;
+          } else {
+            result = 'You Lose!';
+            resultText.style.color = '#ef476f';
+            computerScore++;
+          }
+
+          // Update UI
+          playerScoreEl.textContent = playerScore;
+          computerScoreEl.textContent = computerScore;
+          resultText.textContent = result;
+        }, 800);
+      });
+    });
+  </script>
+</body>
+</html>
